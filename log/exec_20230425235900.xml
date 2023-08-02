@@ -1,0 +1,1 @@
+<exec><start>2023-04-25T23:59:00</start><events><item><datetime>2023-04-25T23:59:00</datetime><type>request_limit</type><error>true</error><detail>Достигнут лимит на 1 http-запросов к сервису в день </detail></item></events><finish>2023-04-25T23:59:00</finish></exec>

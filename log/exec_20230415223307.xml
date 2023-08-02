@@ -1,0 +1,1 @@
+<exec><start>2023-04-15T22:33:07</start><events><item><datetime>2023-04-15T22:33:07</datetime><type>request_limit</type><error>true</error><detail>Достигнут лимит на 1000 запросов в день </detail></item></events><finish>2023-04-15T22:33:07</finish></exec>
