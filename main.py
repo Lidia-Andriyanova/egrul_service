@@ -8,6 +8,7 @@ from dicttoxml import dicttoxml
 import service
 import utils
 import logger
+import perioder
 import counter
 
 
@@ -23,71 +24,77 @@ else:
 
 # Тест
 print(fns_service)
-fns_service['day_request_count'] = 1
+fns_service['day_request_count'] = 2
 
-# Определение количества выполненных http-запросов за текущий день
-counter = counter.Counter(fns_service['day_request_count'])
+perioder = perioder.Perioder()
 
-# Определение лимита http-запросов в день
-if not counter.next():
-    logger.add_event('request_limit', 'Достигнут лимит на ' +
-                     str(fns_service['day_request_count']) + ' http-запросов к сервису в день ', True, True)
-    exit()
 
-# Получение временного сохраненного токена доступа (если есть)
-access_token = None
-if os.path.exists('config/access_token.yaml'):
-    with open('config/access_token.yaml') as f:
-        access_token_yaml = yaml.load(f, Loader=SafeLoader)
-        access_token = access_token_yaml['accessToken']
-        access_end = utils.xmltimestamp_2date(access_token_yaml['accessTokenEndDate'])
+# # Определение максимального количества http-запросов в день
+# counter = counter.Counter(fns_service['day_request_count'])
+#
+# # Определение лимита http-запросов в день
+# if not counter.next():
+#     logger.add_event('request_limit', 'Достигнут лимит на ' +
+#                      str(fns_service['day_request_count']) + ' http-запросов к сервису в день ', True, True)
+#     exit()
+#
+# # Получение временного сохраненного токена доступа (если есть)
+# access_token = None
+# if os.path.exists('config/access_token.yaml'):
+#     with open('config/access_token.yaml') as f:
+#         access_token_yaml = yaml.load(f, Loader=SafeLoader)
+#         access_token = access_token_yaml['accessToken']
+#         access_end = utils.xmltimestamp_2date(access_token_yaml['accessTokenEndDate'])
+#
+# while counter.next():
+#
+#     # Получение нового временого токена доступа от сервиса (если его нет или устарел) и запись в файл
+#     if access_token is None or (access_end - datetime.datetime.now()).total_seconds() < fns_service['last_request_seconds']:
+#         access_token_response = service.AccessTokenRequest(fns_service['requests']['access_token'],
+#                                                            fns_service['master_token'])
+#         access_token_json, access_token_error = access_token_response.exec_request()
+#         logger.add_event('http', access_token_json, access_token_error)
+#         counter.inc()
+#
+#         if not access_token_error:
+#             access_token = access_token_json['accessToken']
+#             access_end = utils.xmltimestamp_2date(access_token_json['accessTokenEndDate'])
+#             with open('config/access_token.yaml', 'w') as f:
+#                 documents = yaml.dump(access_token_json, f)
+#         else:
+#             logger.last_event()
+#             exit()
+#
+#     # Тест
+#     print(access_token, access_end)
+#
+#     if not counter.next():
+#         break
+#
+#     # Перевод временного токена в формат base64
+#     byte_token = base64.b64encode(bytes(access_token, 'utf-8'))
+#     exec_token = byte_token.decode('utf-8')
+#
+#     # Получение списка ЮЛ и ИП на дату
+#     date_request_response = service.DateRequest(fns_service['requests']['date_events'],
+#                                                 exec_token, '2023-01-19')
+#     date_json, date_error = date_request_response.exec_request()
+#     counter.inc()
+#
+#     if not date_error:
+#         logger.add_event('http', 'Запрос по ЮЛ и ИП на дату ' + '2023-01-19' + ' получен', date_error)
+#     else:
+#         logger.add_event('http', date_json, date_error, True)
+#         exit()
+#
+#     # Тест
+#     print(date_json)
+#
+#     if not counter.next():
+#         break
+#
+#     break
 
-while counter.next():
-
-    # Получение нового временого токена доступа от сервиса (если его нет или устарел) и запись в файл
-    if access_token is None or (access_end - datetime.datetime.now()).total_seconds() < fns_service['last_request_seconds']:
-        access_token_response = service.AccessTokenRequest(fns_service['requests']['access_token'],
-                                                           fns_service['master_token'])
-        access_token_json, access_token_error = access_token_response.exec_request()
-        logger.add_event('http', access_token_json, access_token_error)
-        counter.inc()
-
-        if not access_token_error:
-            access_token = access_token_json['accessToken']
-            access_end = utils.xmltimestamp_2date(access_token_json['accessTokenEndDate'])
-            with open('config/access_token.yaml', 'w') as f:
-                documents = yaml.dump(access_token_json, f)
-        else:
-            logger.last_event()
-            exit()
-
-    # Тест
-    print(access_token, access_end)
-
-    if not counter.next():
-        break
-
-    # Перевод временного токена в формат base64
-    byte_token = base64.b64encode(bytes(access_token, 'utf-8'))
-    exec_token = byte_token.decode('utf-8')
-
-    # Получение списка ЮЛ и ИП на дату
-    date_request_response = service.DateRequest(fns_service['requests']['date_events'],
-                                                exec_token, '2023-01-19')
-    date_json, date_error = date_request_response.exec_request()
-    counter.inc()
-
-    if not date_error:
-        logger.add_event('http', 'Запрос по ЮЛ и ИП на дату ' + '2023-01-19' + ' получен', date_error)
-    else:
-        logger.add_event('http', date_json, date_error, True)
-        exit()
-
-    # Тест
-    print(date_json)
-
-    if not counter.next():
-        break
 
 
 

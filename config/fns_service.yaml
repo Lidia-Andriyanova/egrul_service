@@ -2,8 +2,8 @@ requests:
   access_token: https://openapi.tax.gov.ru/auth/v1/token
   date_events: https://openapi.tax.gov.ru/registrations-api/v1/registrations?requestDate=
   ogrn: https://openapi.tax.gov.ru/egrul-api/v1/vyp-xml/
-day_request_count: 1000
-last_request_seconds: 5
+day_request_count: !!int 1000
+last_request_seconds: !!int 5
 master_token: 14Surq5G7zbUCLlzv2Z12cwLTHVOgMBjIerf1ZFA5spp3NGU6dBhA6FK6qbrWe0ZYxpI4NRDJKmHp7CBfGUnggsy3TBocsb10F975wtkvU2GbY4CCpIszRr1R65uWf7g
 regions:
   - !!int 56

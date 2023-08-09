@@ -41,6 +41,6 @@ class Counter:
 
     def save(self):
         with open('config/request_count.yaml', 'w') as f:
-            request_count_dict = [{'current_date': self.current_date, 'current_count': self.current_count}]
+            request_count_dict = {'current_date': self.current_date, 'current_count': self.current_count}
             yaml.dump(request_count_dict, f)
 
