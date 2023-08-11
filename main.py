@@ -10,23 +10,31 @@ import utils
 import logger
 import perioder
 import counter
+import controller
 
 
-logger = logger.Logger()
+# 1 (нач) -----------
+# logger = logger.Logger()
+#
+# # Настройки ФНС
+# if os.path.exists('config/fns_service.yaml'):
+#     with open('config/fns_service.yaml') as f:
+#         fns_service = yaml.load(f, Loader=SafeLoader)
+# else:
+#     logger.add_event('config', "Файл config/fns_service.yaml не существует", True, True)
+#     exit()
+#
+# # Тест
+# print(fns_service)
+# fns_service['day_request_count'] = 2
+#
+# perioder = perioder.Perioder()
 
-# Настройки ФНС
-if os.path.exists('config/fns_service.yaml'):
-    with open('config/fns_service.yaml') as f:
-        fns_service = yaml.load(f, Loader=SafeLoader)
-else:
-    logger.add_event('config', "Файл config/fns_service.yaml не существует", True, True)
-    exit()
+# 1 (кон) -----------
 
-# Тест
-print(fns_service)
-fns_service['day_request_count'] = 2
+controller = controller.Controller()
+controller.run()
 
-perioder = perioder.Perioder()
 
 
 # # Определение максимального количества http-запросов в день
@@ -147,4 +155,4 @@ perioder = perioder.Perioder()
 #             print(file_name)
 #
 #
-logger.last_event()
+# logger.last_event()
